@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 import com.qualcomm.ftccommon.SoundPlayer;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 @TeleOp(name = "MyFIRSTJavaOpMode")
+@Disabled
 public class MyFIRSTJavaOpMode extends LinearOpMode {
 
     private IMU imu;
@@ -37,7 +39,7 @@ public class MyFIRSTJavaOpMode extends LinearOpMode {
     int gyroOffset;
 
     /**
-     * Describe this function...
+     * Nejaka random vec pomoc nemam to rad
      */
     private void updateGyro() {
         if (Math.abs(imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle) > 160) {
@@ -46,13 +48,7 @@ public class MyFIRSTJavaOpMode extends LinearOpMode {
         }
     }
 
-    /**
-     * This sample contains the bare minimum Blocks for any regular OpMode. The 3 blue
-     * Comment Blocks show where to place Initialization code (runs once, after touching the
-     * DS INIT button, and before touching the DS Start arrow), Run code (runs once, after
-     * touching Start), and Loop code (runs repeatedly while the OpMode is active, namely not
-     * Stopped).
-     */
+
     @Override
     public void runOpMode() {
         double target_angle;
