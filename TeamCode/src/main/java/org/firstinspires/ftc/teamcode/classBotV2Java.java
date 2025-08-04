@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 @TeleOp(name = "ClassBotV2Java")
+
 public class classBotV2Java extends LinearOpMode {
     private IMU imu;
     private DcMotor arm;
@@ -27,6 +28,9 @@ public class classBotV2Java extends LinearOpMode {
     double error;
     double targetAngle;
     double calculated_speed;
+    double modified_joysitck;
+    double wheelDiameterCm;
+    double ticksPerRev;
 
     int K_P;
 
@@ -54,6 +58,8 @@ public class classBotV2Java extends LinearOpMode {
     error = 0;
     K_P = 80;
     calculated_speed = 0;
+    wheelDiameterCm = 9;
+    ticksPerRev = 420;
 
 /*
     var target_ang;
@@ -100,13 +106,17 @@ public class classBotV2Java extends LinearOpMode {
             telemetry.addData("error:", error);
             telemetry.addData("imu:", GetGyro());
             telemetry.addData("target angle:", targetAngle);
+            telemetry.addData("pid", pid.get(error));
+            telemetry.addData("joystick", modified_joysitck);
+            telemetry.addData("ticks to cm", TicksToCm(90));
 
             if (gamepad1.left_trigger-gamepad1.right_trigger != 0){
-                targetAngle = targetAngle + ( gamepad1.left_stick_x) *3;
+                modified_joysitck = (Math.pow(gamepad1.left_stick_x, 3)+(0.7 * gamepad1.left_stick_x)) * 0.6;
+                targetAngle = targetAngle - (modified_joysitck) *3;
 
-                calculated_speed = (3000*(gamepad1.left_trigger-gamepad1.right_trigger))+pid.get(error);
-                ((DcMotorEx) right_drive).setVelocity(calculated_speed);
-                ((DcMotorEx) left_drive).setVelocity(calculated_speed);
+                calculated_speed = (3000*(gamepad1.left_trigger-gamepad1.right_trigger));
+                ((DcMotorEx) right_drive).setVelocity(-calculated_speed-pid.get(error));
+                ((DcMotorEx) left_drive).setVelocity(calculated_speed-pid.get(error));
 
             } else if (gamepad1.right_trigger-gamepad1.left_trigger == 0) {
                 ((DcMotorEx) right_drive).setVelocity(0);
@@ -124,6 +134,12 @@ public class classBotV2Java extends LinearOpMode {
 
     private double GetGyro() {
         return imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle + gyroOffset;
+    }
+    private double TicksToCm(double targetDistanceCm) {
+
+
+        double wheelCircumference = Math.PI * wheelDiameterCm;
+        return ((targetDistanceCm / wheelCircumference) * ticksPerRev);
     }
 }
 

@@ -8,15 +8,13 @@ public class PID {
     private double P;
     private double I;
     private double D;
-    private double k_p;
-    private double k_i;
-    private double k_d;
+    private final double k_p;
+    private final double k_i;
+    private final double k_d;
     private double last_error;
     private double PID;
 
     ElapsedTime current_time;
-
-
 
 
     public PID(double k_p, double k_i, double k_d){
@@ -41,7 +39,7 @@ public class PID {
     private double _get_d(){
         this.D = (this.last_error-this.error) / this.elapsed_time * this.k_d;
         this.last_error = this.error;
-        return 8;
+        return this.D;
     }
 
     public double get(double error){
